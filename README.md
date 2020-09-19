@@ -49,4 +49,16 @@ MAX_NOTES_PER_REQUEST=10
 - `MARKDOWN_QUESTION_SELECTORS` and `MARKDOWN_ANSWER_SELECTORS` can contain multiple selectors separated by a comma. 
 - Sometimes when a big markdown file with a lot of questions is pushed to ANKI it might fail, so I added `MAX_NOTES_PER_REQUEST` which split questions to chunks of N questions/answers per chunk/request.
 - I advice you to clone the [**Basic** model (note type)](https://apps.ankiweb.net/docs/manual20.html#note-types) and add to its [styling section](https://apps.ankiweb.net/docs/manual20.html#card-styling) the one of the following [CSS styles](https://github.com/highlightjs/highlight.js/tree/master/src/styles) supported by [highlight.js](https://github.com/highlightjs/highlight.js) to support highlighting. 
+- To support inline highlight you should use the following workaround, manually add the following CSS to styling section:
+```
+.inline-code {
+    padding: .2em .4em;
+    margin: 0;
+    font-size: 85%;
+    background-color: rgba(27,31,35,.05);
+    border-radius: 6px;
+}
+
+```
+For more details, look at this issue [when using renderInline, highlight doesn't work.](https://github.com/markdown-it/markdown-it/issues/576)
 - After all preparations are done just invoke from the root folder `npm run index`, ANKI obviously must be open when you run it.

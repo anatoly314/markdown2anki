@@ -3,21 +3,35 @@ import hljs from "highlight.js";
 
 export class AnkiNote {
 
-    static md = markdownIt({
-        highlight: function (str, lang) {
-            if (lang && hljs.getLanguage(lang)) {
-                try {
-                    return '<pre class="hljs"><code>' +
-                        hljs.highlight(lang, str, true).value +
-                        '</code></pre>';
-                } catch (e) {
-                    console.error(e);
-                }
-            }
+    static md;
+    static getMarkdownParser () {
+        if (!AnkiNote.md) {
+            AnkiNote.md = markdownIt({
+                highlight: function (str, lang) {
+                    if (lang && hljs.getLanguage(lang)) {
+                        try {
+                            // const highlighted = '<pre class="hljs"><code>' + hljs.highlight(lang, str, true).value + '</code></pre>';
+                            const highlighted = `<pre class="hljs"><code> ${hljs.highlight(lang, str, true).value} </code></pre>`;
+                            return highlighted;
+                        } catch (e) {
+                            console.error(e);
+                        }
+                    }
 
-            return '<pre class="hljs"><code>' + AnkiNote.md.utils.escapeHtml(str) + '</code></pre>';
+                    return '<pre class="hljs"><code>' + AnkiNote.md.utils.escapeHtml(str) + '</code></pre>';
+                }
+            });
         }
-    });
+
+        AnkiNote.md.renderer.rules.code_inline =  function (tokens, idx, options, env, slf) {
+            const token = tokens[idx];
+            const inline =  `<code class="inline-code">${AnkiNote.md.utils.escapeHtml(token.content)}</code>`;
+            return inline;
+        };
+
+        return AnkiNote.md;
+    }
+
 
     front;
     back;
@@ -30,7 +44,8 @@ export class AnkiNote {
     constructor(frontRaw, backRaw) {
         this.frontRaw = frontRaw;
         this.backRaw = backRaw;
-        this.front = AnkiNote.md.render(frontRaw);
-        this.back = AnkiNote.md.render(backRaw);
+
+        this.front = AnkiNote.getMarkdownParser().render(frontRaw);
+        this.back = AnkiNote.getMarkdownParser().render(backRaw);
     }
 }
