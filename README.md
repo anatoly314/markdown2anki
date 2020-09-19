@@ -20,6 +20,7 @@ Write a simple programm which prints "Hello World" in JavaScript
 ```
 
 - This file above will generate 2 ANKI cards with corresponded questions and answers.
+- `#QUESTION#` and `#ANSWER#` selectors defining the starting of question and answer respectively.
 - Thanks to [highlight.js](https://github.com/highlightjs/highlight.js) source code will be highlighted in the right way.
 
 ## Prerequisites
@@ -46,7 +47,7 @@ MAX_NOTES_PER_REQUEST=10
 ```
 
 - Most settings are self explaining. 
-- `MARKDOWN_QUESTION_SELECTORS` and `MARKDOWN_ANSWER_SELECTORS` can contain multiple selectors separated by a comma. 
+- `MARKDOWN_QUESTION_SELECTORS` and `MARKDOWN_ANSWER_SELECTORS`  are selectors which defining the start of the question and answer, see `example.md` above. They both can contain multiple selectors separated by a comma. 
 - Sometimes when a big markdown file with a lot of questions is pushed to ANKI it might fail, so I added `MAX_NOTES_PER_REQUEST` which split questions to chunks of N questions/answers per chunk/request.
 - I advice you to clone the [**Basic** model (note type)](https://apps.ankiweb.net/docs/manual20.html#note-types) and add to its [styling section](https://apps.ankiweb.net/docs/manual20.html#card-styling) the one of the following [CSS styles](https://github.com/highlightjs/highlight.js/tree/master/src/styles) supported by [highlight.js](https://github.com/highlightjs/highlight.js) to support highlighting. 
 - To support inline highlight you should use the following workaround, manually add the following CSS to styling section:

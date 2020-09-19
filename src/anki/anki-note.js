@@ -10,7 +10,6 @@ export class AnkiNote {
                 highlight: function (str, lang) {
                     if (lang && hljs.getLanguage(lang)) {
                         try {
-                            // const highlighted = '<pre class="hljs"><code>' + hljs.highlight(lang, str, true).value + '</code></pre>';
                             const highlighted = `<pre class="hljs"><code> ${hljs.highlight(lang, str, true).value} </code></pre>`;
                             return highlighted;
                         } catch (e) {
@@ -25,7 +24,7 @@ export class AnkiNote {
 
         AnkiNote.md.renderer.rules.code_inline =  function (tokens, idx, options, env, slf) {
             const token = tokens[idx];
-            const inline =  `<code class="inline-code">${AnkiNote.md.utils.escapeHtml(token.content)}</code>`;
+            const inline = `<code class="inline-code">${AnkiNote.md.utils.escapeHtml(token.content)}</code>`;
             return inline;
         };
 
