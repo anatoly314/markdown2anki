@@ -1,0 +1,19 @@
+{
+  "name": "data2anki",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "index": "node --experimental-modules --es-module-specifier-resolution=node index.js"
+  },
+  "dependencies": {
+    "axios": "^0.18.0",
+    "java": "^0.12.1",
+    "highlight.js": "^9.15.6",
+    "markdown-it": "^8.4.2",
+    "dotenv": "^8.2.0"
+  },
+  "author": "",
+  "license": "ISC"
+}
