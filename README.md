@@ -28,6 +28,11 @@ Write a simple programm which prints "Hello World" in JavaScript
 - NodeJS >= 10 (I always used the latest NodeJS library but guess that older will work as well)
 
 ## Usage
+- `git clone`
+- `npm install`
+- `npm run index`
+
+## Configuration
 The configuration is done in the `.env` file located in the root folder.
 ```
 ANKI_URI=http://localhost:8765

@@ -1,5 +1,5 @@
 {
-  "name": "data2anki",
+  "name": "markdown2anki",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -15,5 +15,5 @@
     "dotenv": "^8.2.0"
   },
   "author": "",
-  "license": "ISC"
+  "license": "MIT"
 }
