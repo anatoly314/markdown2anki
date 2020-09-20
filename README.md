@@ -45,7 +45,7 @@ MARKDOWN_ANSWER_SELECTORS=#ANSWER#
 MARKDOWN_PATH_TO_FILE=/Users/anatoly/Documents/git/anki-cards/fullstack.md
 MAX_NOTES_PER_REQUEST=10
 ```
-
+- Deck and model with names specified in `ANKI_DECK_NAME` and `ANKI_MODEL_NAME` must be created manually prior to running this script. 
 - Most settings are self explaining. 
 - `MARKDOWN_QUESTION_SELECTORS` and `MARKDOWN_ANSWER_SELECTORS`  are selectors which defining the start of the question and answer, see `example.md` above. They both can contain multiple selectors separated by a comma. 
 - Sometimes when a big markdown file with a lot of questions is pushed to ANKI it might fail, so I added `MAX_NOTES_PER_REQUEST` which split questions to chunks of N questions/answers per chunk/request.
@@ -62,4 +62,5 @@ MAX_NOTES_PER_REQUEST=10
 
 ```
 For more details, look at this issue [when using renderInline, highlight doesn't work.](https://github.com/markdown-it/markdown-it/issues/576)
+- Note title are global, i.e. two notes with the same title can't be created even in different decks, see this issue [canAddNote returns false when note with same field's value exists in a different deck](https://github.com/FooSoft/anki-connect/issues/81).
 - After all preparations are done just invoke from the root folder `npm run index`, ANKI obviously must be open when you run it.
