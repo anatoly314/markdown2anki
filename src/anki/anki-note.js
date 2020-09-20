@@ -20,13 +20,13 @@ export class AnkiNote {
                     return '<pre class="hljs"><code>' + AnkiNote.md.utils.escapeHtml(str) + '</code></pre>';
                 }
             });
-        }
 
-        AnkiNote.md.renderer.rules.code_inline =  function (tokens, idx, options, env, slf) {
-            const token = tokens[idx];
-            const inline = `<code class="inline-code">${AnkiNote.md.utils.escapeHtml(token.content)}</code>`;
-            return inline;
-        };
+            AnkiNote.md.renderer.rules.code_inline =  function (tokens, idx, options, env, slf) {
+                const token = tokens[idx];
+                const inline = `<code class="inline-code">${AnkiNote.md.utils.escapeHtml(token.content)}</code>`;
+                return inline;
+            };
+        }
 
         return AnkiNote.md;
     }

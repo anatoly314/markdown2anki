@@ -31,6 +31,15 @@ export const getDeckNames = async function () {
     return data;
 }
 
+export const getModelNames = async function () {
+    const body = {
+        "action": "modelNames",
+        "version": process.env.ANKI_API_VERSION
+    };
+    const data = await _axiosPostRequest(body);
+    return data;
+}
+
 export const getDecks = async function (cardIds = []) {
     const body = {
         "action": "getDecks",

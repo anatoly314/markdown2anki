@@ -1,4 +1,4 @@
-import { canAddNotes, addNotes } from './anki-connect-api';
+import {canAddNotes, addNotes, getDeckNames, getModelNames} from './anki-connect-api';
 
 export const checkIfNotesCanBeAdded = async function (notesData, deckName, modelName) {
     const frontFiels = notesData.map((noteData, index) => {
@@ -14,6 +14,34 @@ export const checkIfNotesCanBeAdded = async function (notesData, deckName, model
 
     return notesData;
 };
+
+export const checkIfDeckExists = async function (deckName) {
+    const existingDeckNames = await getDeckNames();
+
+    if (!deckName) {
+        throw new Error(`You must provide existing DECK name`);
+    }
+
+    if (Object.keys(existingDeckNames.result).indexOf(deckName) < 0) {
+        throw new Error(`Deck with name ${deckName} doesn't exists in ANKI`);
+    }
+
+    return true;
+}
+
+export const checkIfModelNameExists = async function (modelName) {
+    const existingModelNames = await getModelNames();
+
+    if (!modelName) {
+        throw new Error(`You must provide existing MODEL name`);
+    }
+
+    if (existingModelNames.result.indexOf(modelName) < 0) {
+        throw new Error(`MODEL with name ${modelName} doesn't exists in ANKI`);
+    }
+
+    return true;
+}
 
 export const printWhichCannotBeAdded = function (notesData) {
     notesData.forEach(noteData => {
