@@ -1,19 +1,4 @@
-import {canAddNotes, addNotes, getDeckNames, getModelNames} from './anki-connect-api';
-
-export const checkIfNotesCanBeAdded = async function (notesData, deckName, modelName) {
-    const frontFiels = notesData.map((noteData, index) => {
-        return noteData.front;
-    })
-
-    const response = await canAddNotes(deckName, modelName, frontFiels);
-    response.result.forEach((canBeAdded, noteIndex) => {
-        if(!canBeAdded){
-            notesData[noteIndex].canBeAdded = false;
-        }
-    })
-
-    return notesData;
-};
+import { getDeckNames, getModelNames, getNotes } from './anki-connect-api';
 
 export const checkIfDeckExists = async function (deckName) {
     const existingDeckNames = await getDeckNames();
@@ -29,6 +14,15 @@ export const checkIfDeckExists = async function (deckName) {
     return true;
 }
 
+export const getNoteIdIfExists = async function(deckName,modelName, ankiNote) {
+    const response = await getNotes(deckName, modelName, ankiNote.front);
+    if (response.result.length > 1) {
+        throw new Error("Possible multiple notes with same front fields, check for duplicates");
+    } else {
+        return response.result[0];
+    }
+}
+
 export const checkIfModelNameExists = async function (modelName) {
     const existingModelNames = await getModelNames();
 
@@ -41,28 +35,4 @@ export const checkIfModelNameExists = async function (modelName) {
     }
 
     return true;
-}
-
-export const printWhichCannotBeAdded = function (notesData) {
-    notesData.forEach(noteData => {
-        if(!noteData.canBeAdded){
-            const firstRawLine = noteData.frontRaw.split("\n")[0];
-            console.log("Can't be added: ", firstRawLine);
-        }
-    })
-};
-
-export const printNotesWhichWereNotAdded = function(notesData, notesCreationResponse) {
-    notesCreationResponse.result.forEach((result, index) => {
-        if(!result){
-            console.log("Wasn't added", notesData[index]);
-        }
-    });
-};
-
-export const addMultipleNotesData = async function (notesData, deckName, modelName) {
-    notesData = await checkIfNotesCanBeAdded(notesData, deckName, modelName);
-    printWhichCannotBeAdded(notesData);
-    const notesCreationResponse = await addNotes(notesData, deckName, modelName);
-    printNotesWhichWereNotAdded(notesData, notesCreationResponse);
 }

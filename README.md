@@ -32,6 +32,10 @@ Write a simple programm which prints "Hello World" in JavaScript
 - `git clone`
 - `npm install`
 - `npm run index`
+- **Important**:
+    - When you update notes ANKI browser must be closed, see this issue: [updateNoteFields returns errorless but does nothing](https://github.com/FooSoft/anki-connect/issues/82#issuecomment-500179245)
+    - If you use it on the Macbook, keep ANKI active when you're running this script, 
+    otherwise it might be extremely slow due to [AppNap](https://www.howtogeek.com/277414/what-is-app-nap-is-it-slowing-down-my-mac-apps/) see this issue: [Response taking SECONDS in MacOS :O](https://github.com/FooSoft/anki-connect/issues/129#issuecomment-696768108)
 
 ## Configuration
 The configuration is done in the `.env` file located in the root folder.

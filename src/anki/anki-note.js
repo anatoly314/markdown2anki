@@ -38,8 +38,6 @@ export class AnkiNote {
     frontRaw;
     backRaw;
 
-    canBeAdded = true;
-
     constructor(frontRaw, backRaw) {
         this.frontRaw = frontRaw;
         this.backRaw = backRaw;

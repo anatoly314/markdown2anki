@@ -52,69 +52,60 @@ export const getDecks = async function (cardIds = []) {
     return data;
 }
 
-export const canAddNotes = async function (deckName, modelName, frontFields = []) {
+export const getNotes = async function (deckName, modelName, frontField) {
     const body = {
-        action: "canAddNotes",
-        version: process.env.ANKI_API_VERSION,
-        params: {
-            notes: []
+        "action": "findNotes",
+        "version": process.env.ANKI_API_VERSION,
+        "params": {
+            "query": `"deck:${deckName}" "note:${modelName}" "front:${frontField}"`,
         }
     };
-
-    const noteTemplate = {
-        deckName: deckName,
-        modelName: modelName,
-        fields: {
-            Front: ""
-        },
-        tags:[]
-    };
-
-    const notes = frontFields.map(frontField => {
-        const note = Object.assign({}, noteTemplate, {
-            fields: {
-                Front: frontField
-            }
-        });
-        return note;
-    });
-    body.params.notes = notes;
     const data = await _axiosPostRequest(body);
     return data;
 }
 
-export const addNotes = async function (notesData, deckName, modelName) {
+export const addNote = async function (ankiNote, deckName, modelName) {
     const body = {
-        action: "addNotes",
+        action: "addNote",
         version: process.env.ANKI_API_VERSION,
         params: {
-            notes: []
+            note: {
+                deckName: deckName,
+                modelName: modelName,
+                fields: {
+                    Front: "",
+                    Back: ""
+                },
+                tags:[]
+            }
         }
     };
 
-    const noteTemplate = {
-        deckName: deckName,
-        modelName: modelName,
-        fields: {
-            Front: "",
-            Back: ""
-        },
-        tags:[]
+    body.params.note.fields.Front = ankiNote.front;
+    body.params.note.fields.Back = ankiNote.back;
+
+    const data = await _axiosPostRequest(body);
+    return data;
+}
+
+export const updateNote = async function (id, ankiNote) {
+    const body = {
+        action: "updateNoteFields",
+        version: process.env.ANKI_API_VERSION,
+        params: {
+            note: {
+                id: id,
+                fields: {
+                    Front: "",
+                    Back: ""
+                }
+            }
+        }
     };
 
-    const notes = notesData.filter(noteData => {
-        return noteData.canBeAdded;
-    }).map(noteData => {
-        const note = Object.assign({}, noteTemplate, {
-            fields: {
-                Front: noteData.front,
-                Back: noteData.back
-            }
-        });
-        return note;
-    });
+    body.params.note.fields.Front = ankiNote.front;
+    body.params.note.fields.Back = ankiNote.back;
 
-    body.params.notes = notes;
     const data = await _axiosPostRequest(body);
     return data;
 }
