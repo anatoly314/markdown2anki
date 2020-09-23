@@ -1,5 +1,8 @@
-import markdownIt from "markdown-it";
-import hljs from "highlight.js";
+import * as markdownIt from "markdown-it";
+import * as hljs from "highlight.js";
+import * as fs from "fs";
+import * as path from "path";
+
 
 export class AnkiNote {
 
@@ -26,6 +29,16 @@ export class AnkiNote {
                 const token = tokens[idx];
                 const inline = `<code class="inline-code">${AnkiNote.md.utils.escapeHtml(token.content)}</code>`;
                 return inline;
+            };
+
+            AnkiNote.md.renderer.rules.image = function (tokens, idx, options, env, self) {
+                const token = tokens[idx];
+                // const src = token.attrGet('src');
+                // const file = fs.readFileSync(path.resolve(__dirname, src));
+                // console.log("image");
+                //
+                // // pass token to default renderer.
+                return "image here";
             };
         }
 
