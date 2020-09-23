@@ -7,6 +7,7 @@ export class AnkiNote {
     static getMarkdownParser () {
         if (!AnkiNote.md) {
             AnkiNote.md = markdownIt({
+                html: true,
                 highlight: function (str, lang) {
                     if (lang && hljs.getLanguage(lang)) {
                         try {
