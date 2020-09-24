@@ -15,8 +15,8 @@ async function _axiosPostRequest(body){
  */
 export const getVersion = async function () {
     const body = {
-        "action": "version",
-        "version": process.env.ANKI_API_VERSION
+        action: "version",
+        version: process.env.ANKI_API_VERSION
     };
     const data = await _axiosPostRequest(body);
     return data;
@@ -24,8 +24,8 @@ export const getVersion = async function () {
 
 export const getDeckNames = async function () {
     const body = {
-        "action": "deckNamesAndIds",
-        "version": process.env.ANKI_API_VERSION
+        action: "deckNamesAndIds",
+        version: process.env.ANKI_API_VERSION
     };
     const data = await _axiosPostRequest(body);
     return data;
@@ -33,8 +33,8 @@ export const getDeckNames = async function () {
 
 export const getModelNames = async function () {
     const body = {
-        "action": "modelNames",
-        "version": process.env.ANKI_API_VERSION
+        action: "modelNames",
+        version: process.env.ANKI_API_VERSION
     };
     const data = await _axiosPostRequest(body);
     return data;
@@ -42,10 +42,10 @@ export const getModelNames = async function () {
 
 export const getDecks = async function (cardIds = []) {
     const body = {
-        "action": "getDecks",
-        "version": process.env.ANKI_API_VERSION,
-        "params": {
-            "cards": cardIds
+        action: "getDecks",
+        version: process.env.ANKI_API_VERSION,
+        params: {
+            cards: cardIds
         }
     };
     const data = await _axiosPostRequest(body);
@@ -54,57 +54,92 @@ export const getDecks = async function (cardIds = []) {
 
 export const getNotes = async function (deckName, modelName, frontField) {
     const body = {
-        "action": "findNotes",
-        "version": process.env.ANKI_API_VERSION,
-        "params": {
-            "query": `"deck:${deckName}" "note:${modelName}" "front:${frontField}"`,
+        action: "findNotes",
+        version: process.env.ANKI_API_VERSION,
+        params: {
+            query: `"deck:${deckName}" "note:${modelName}" "front:${frontField}"`,
         }
     };
     const data = await _axiosPostRequest(body);
     return data;
 }
 
+
 export const addNote = async function (ankiNote, deckName, modelName) {
     const body = {
-        action: "addNote",
+        action: "multi",
         version: process.env.ANKI_API_VERSION,
+        params: {
+            actions: []
+        }
+    };
+
+    const addNoteAction = {
+        action: "addNote",
         params: {
             note: {
                 deckName: deckName,
                 modelName: modelName,
                 fields: {
-                    Front: "",
-                    Back: ""
+                    Front: ankiNote.front,
+                    Back: ankiNote.back
                 },
-                tags:[]
+                tags: []
             }
         }
-    };
+    }
+    body.params.actions.push(addNoteAction);
 
-    body.params.note.fields.Front = ankiNote.front;
-    body.params.note.fields.Back = ankiNote.back;
+    ankiNote.files.forEach(file => {
+        const addFileAction = {
+            action: "storeMediaFile",
+            params: {
+                filename: file.filename,
+                data: file.fileData
+            }
+        }
+        body.params.actions.push(addFileAction);
+    })
 
     const data = await _axiosPostRequest(body);
     return data;
 }
 
 export const updateNote = async function (id, ankiNote) {
+
     const body = {
-        action: "updateNoteFields",
+        action: "multi",
         version: process.env.ANKI_API_VERSION,
+        params: {
+            actions: []
+        }
+    };
+
+    const updateNoteAction = {
+        action: "updateNoteFields",
         params: {
             note: {
                 id: id,
                 fields: {
-                    Front: "",
-                    Back: ""
-                }
+                    Front: ankiNote.front,
+                    Back: ankiNote.back
+                },
+                tags: []
             }
         }
-    };
+    }
+    body.params.actions.push(updateNoteAction);
 
-    body.params.note.fields.Front = ankiNote.front;
-    body.params.note.fields.Back = ankiNote.back;
+    ankiNote.files.forEach(file => {
+        const addFileAction = {
+            action: "storeMediaFile",
+            params: {
+                filename: file.filename,
+                data: file.fileData
+            }
+        }
+        body.params.actions.push(addFileAction);
+    })
 
     const data = await _axiosPostRequest(body);
     return data;

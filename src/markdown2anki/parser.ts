@@ -1,11 +1,11 @@
-import * as fs from 'fs';
+import { readFileSync, readdirSync, createReadStream } from 'fs';
 import * as readline from 'readline';
 
-import { AnkiNote } from '../anki/anki-note';
+import { AnkiNote } from '../anki/classes/anki-note';
 
-export function getNotesFromMarkdownFile(filename) {
+export function getMarkdownNotesFromPath(path) {
 
-    function _checkIfQuestionStarts(line) {
+    function _checkIfQuestionStarts(line): boolean {
         let questionStarts = false;
         process.env.MARKDOWN_QUESTION_SELECTORS.split(",").forEach(selector => {
             if(line.trim() === selector){
@@ -15,7 +15,7 @@ export function getNotesFromMarkdownFile(filename) {
         return questionStarts;
     }
 
-    function _checkIfAnswerStarts(line) {
+    function _checkIfAnswerStarts(line): boolean {
         let answerStarts = false;
         process.env.MARKDOWN_ANSWER_SELECTORS.split(",").forEach(selector => {
             if(line.trim() === selector){
@@ -25,6 +25,27 @@ export function getNotesFromMarkdownFile(filename) {
         return answerStarts;
     }
 
+    function _getPathToMarkdownFile(path): string {
+        const dirEntries = readdirSync(path, {
+            withFileTypes: true
+        });
+
+        const filenames = dirEntries.reduce((entries, dirEntry) => {
+            if (dirEntry.isFile() && dirEntry.name.endsWith(".md")) {
+                entries.push(dirEntry.name);
+            }
+            return entries;
+        }, [])
+
+        if (filenames.length === 0) {
+            throw new Error(`No markdown file found in ${path}`);
+        } else if (filenames.length > 1) {
+            throw new Error(`More than 1 markdown file found in ${path}, \n multiple markdown files currently not supported`);
+        } else {
+            return path.endsWith("/") ? `${path}${filenames[0]}` : `${path}/${filenames[0]}`;
+        }
+    }
+
     return new Promise((resolve, reject) => {
         try {
             let frontRaw = '';
@@ -32,7 +53,8 @@ export function getNotesFromMarkdownFile(filename) {
             let notes = [];
             let firstQuestion = true;
 
-            const fileStream = fs.createReadStream(filename);
+            const pathToMarkdownFile = _getPathToMarkdownFile(path);
+            const fileStream = createReadStream(pathToMarkdownFile);
 
             const rl = readline.createInterface({
                 input: fileStream,

@@ -1,7 +1,7 @@
 import { config } from 'dotenv';
 config();
 
-import { getNotesFromMarkdownFile } from "./markdown2anki/parser";
+import { getMarkdownNotesFromPath } from "./markdown2anki/parser";
 import {
     checkIfDeckExists,
     checkIfModelNameExists,
@@ -14,7 +14,7 @@ async function main() {
 
     try {
         const override = process.env.OVERRIDE_NOTE === 'true';
-        const ankiNotes: any = await getNotesFromMarkdownFile(process.env.MARKDOWN_PATH_TO_FILE);
+        const ankiNotes: any = await getMarkdownNotesFromPath(process.env.MARKDOWN_PATH_TO);
 
         await checkIfDeckExists(process.env.ANKI_DECK_NAME);
         await checkIfModelNameExists(process.env.ANKI_MODEL_NAME);

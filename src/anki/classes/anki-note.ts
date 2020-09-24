@@ -1,7 +1,7 @@
 import * as markdownIt from "markdown-it";
-import * as hljs from "highlight.js";
-import * as fs from "fs";
-import * as path from "path";
+import { getLanguage, highlight } from "highlight.js";
+import { readFileSync } from "fs";
+import { resolve } from "path";
 import { createHash } from "crypto";
 
 interface IFile {
@@ -17,9 +17,9 @@ export class AnkiNote {
             AnkiNote.md = markdownIt({
                 html: true,
                 highlight: function (str, lang) {
-                    if (lang && hljs.getLanguage(lang)) {
+                    if (lang && getLanguage(lang)) {
                         try {
-                            const highlighted = `<pre class="hljs"><code> ${hljs.highlight(lang, str, true).value} </code></pre>`;
+                            const highlighted = `<pre class="hljs"><code> ${highlight(lang, str, true).value} </code></pre>`;
                             return highlighted;
                         } catch (e) {
                             console.error(e);
@@ -39,8 +39,7 @@ export class AnkiNote {
             AnkiNote.md.renderer.rules.image = function (tokens, idx, options, env, self) {
                 const token = tokens[idx];
                 const src = token.attrGet('src');
-                const pathToImagesFolder = process.env.MARKDOWN_PATH_TO_FILE.slice(0, process.env.MARKDOWN_PATH_TO_FILE.lastIndexOf("/"));
-                const base64file = fs.readFileSync(path.resolve(pathToImagesFolder, src), {encoding: 'base64'});
+                const base64file = readFileSync(resolve(process.env.MARKDOWN_PATH_TO, src), {encoding: 'base64'});
                 const uniqueFileName = `${frontHash}-${src.split("/")[1]}`;
                 populateFilesCallback({
                     filename: uniqueFileName,
@@ -62,19 +61,20 @@ export class AnkiNote {
     frontRaw: string;
     backRaw: string;
 
-    private frontHash: string;
-    private files: IFile[];
+    frontHash: string;
+    files: IFile[] = [];
 
     constructor(frontRaw, backRaw) {
         this.frontRaw = frontRaw;
         this.backRaw = backRaw;
         this.frontHash = createHash('md5').update(this.frontRaw).digest('hex')
 
-        this.front = AnkiNote.getMarkdownParser(this.frontHash, this.populateFilesCallback).render(frontRaw);
-        this.back = AnkiNote.getMarkdownParser(this.frontHash, this.populateFilesCallback).render(backRaw);
+        this.front = AnkiNote.getMarkdownParser(this.frontHash, this.populateFilesCallback.bind(this)).render(frontRaw);
+        this.back = AnkiNote.getMarkdownParser(this.frontHash, this.populateFilesCallback.bind(this)).render(backRaw);
     }
 
     populateFilesCallback(file){
         this.files.push(file);
     }
+
 }
