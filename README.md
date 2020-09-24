@@ -6,6 +6,9 @@ A simple NodeJS utility to create [ANKI](https://apps.ankiweb.net/)  cards from 
 
 - Example of markdown file `example.md`:
 ```
+DECK=JavaScript Test
+MODEL=Basic Code Highlight
+
 #QUESTION#
 What is the JavaScript?
 #ANSWER#
@@ -21,6 +24,7 @@ Write a simple programm which prints "Hello World" in JavaScript
 
 - This file above will generate 2 ANKI cards with corresponded questions and answers.
 - `#QUESTION#` and `#ANSWER#` selectors defining the starting of question and answer respectively.
+- `DECK` and `MODEL` defining [deck name](https://docs.ankiweb.net/#/getting-started?id=decks) and [model name (note type)](https://docs.ankiweb.net/#/getting-started?id=note-types) respectively.
 - Thanks to [highlight.js](https://github.com/highlightjs/highlight.js) source code will be highlighted in the right way.
 
 ## Prerequisites
@@ -42,14 +46,11 @@ The configuration is done in the `.env` file located in the root folder.
 ```
 ANKI_URI=http://localhost:8765
 ANKI_API_VERSION=6
-ANKI_DECK_NAME=JavaScript Test
-ANKI_MODEL_NAME=Basic
 MARKDOWN_QUESTION_SELECTORS=#QUESTION#
 MARKDOWN_ANSWER_SELECTORS=#ANSWER#
 MARKDOWN_PATH_TO_FILE=/Users/anatoly/Documents/git/anki-cards/fullstack.md
 OVERRIDE_NOTE=false
 ```
-- Deck and model with names specified in `ANKI_DECK_NAME` and `ANKI_MODEL_NAME` must be created manually prior to running this script. 
 - Most settings are self explaining. 
 - `MARKDOWN_QUESTION_SELECTORS` and `MARKDOWN_ANSWER_SELECTORS`  are selectors which defining the start of the question and answer, see `example.md` above. They both can contain multiple selectors separated by a comma.
 - `OVERRIDE_NOTE`, if true it will override answer for the note with the same **Front** field 

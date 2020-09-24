@@ -1,3 +1,6 @@
+DECK=JavaScript Test
+MODEL=Basic Code Highlight
+
 #QUESTION#
 ## Question 2. For which value of `x` the results of the following statements are not the same?
 

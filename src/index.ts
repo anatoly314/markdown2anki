@@ -1,7 +1,7 @@
 import { config } from 'dotenv';
 config();
 
-import { getMarkdownNotesFromPath } from "./markdown2anki/parser";
+import { getParsedMarkdown } from "./markdown2anki/parser";
 import {
     checkIfDeckExists,
     checkIfModelNameExists,
@@ -14,17 +14,17 @@ async function main() {
 
     try {
         const override = process.env.OVERRIDE_NOTE === 'true';
-        const ankiNotes: any = await getMarkdownNotesFromPath(process.env.MARKDOWN_PATH_TO);
+        const parsedMarkdown: any = await getParsedMarkdown(process.env.MARKDOWN_PATH_TO);
 
-        await checkIfDeckExists(process.env.ANKI_DECK_NAME);
-        await checkIfModelNameExists(process.env.ANKI_MODEL_NAME);
+        await checkIfDeckExists(parsedMarkdown.deckName);
+        await checkIfModelNameExists(parsedMarkdown.modelName);
 
 
-        for(const ankiNote of ankiNotes){
-            const noteId = await getNoteIdIfExists(process.env.ANKI_DECK_NAME, process.env.ANKI_MODEL_NAME, ankiNote);
+        for(const ankiNote of parsedMarkdown.notes){
+            const noteId = await getNoteIdIfExists(parsedMarkdown.deckName, parsedMarkdown.modelName, ankiNote);
 
             if (!noteId) {
-                await addNote(ankiNote, process.env.ANKI_DECK_NAME, process.env.ANKI_MODEL_NAME);
+                await addNote(ankiNote, parsedMarkdown.deckName, parsedMarkdown.modelName);
             } else if (noteId && override) {
                 await updateNote(noteId, ankiNote);
             } else if (noteId && !override) {
